@@ -11,6 +11,7 @@ import SplashScreen from './Splash';
 import PressureScreen from './Pressure';
 import LifeSpanScreen from './Lifespan';
 import SettingScreen from './Setting';
+import LocationScreen from './Location';
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
@@ -91,6 +92,35 @@ function LifeSpanStackScreen() {
     );
 }
 
+const LocationStack = createStackNavigator();
+function LocationStackScreen() {
+    return (
+        <LocationStack.Navigator
+            initialRouteName="Pressure"
+            screenOptions={{
+                cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS   ///////////////////////////// AND HERE
+            }}
+        >
+            <LocationStack.Screen
+                name="Location"
+                component={LocationScreen}
+                options={{
+                    title: 'Location',
+                    headerStyle: {
+                        backgroundColor: 'red',
+                    },
+                    headerTintColor: 'white',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                }}
+
+            />
+        </LocationStack.Navigator>
+    );
+}
+
 const Tab = createBottomTabNavigator();
 function App() {
     return (
@@ -104,6 +134,8 @@ function App() {
                             iconName = 'exclamation';
                         } else if (route.name === 'LifeSpan') {
                             iconName = 'heartbeat';
+                        }else if (route.name === 'Map') {
+                            iconName = 'map';
                         }
 
                         // You can return any component that you like here!
@@ -127,6 +159,8 @@ function App() {
             >
                 <Tab.Screen name="Pressure" component={PressureStackScreen} />
                 <Tab.Screen name="LifeSpan" component={LifeSpanStackScreen} />
+                <Tab.Screen name="Map" component={LocationStackScreen} />
+
             </Tab.Navigator>
         </NavigationContainer>
     );

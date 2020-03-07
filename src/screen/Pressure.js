@@ -12,7 +12,6 @@ import {
 import Fontawesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-community/async-storage';
 import Notification from '../util/notification';
-import { CardStyleInterpolators } from 'react-navigation-stack';
 
 
 import { db } from '../util/config';
@@ -57,6 +56,15 @@ export default class App extends Component {
         let noti = await AsyncStorage.getItem("notification");
         this.setState({ max: max, min: min, type: type, noti: JSON.parse(noti) })
 
+        // const { navigation } = this.props;
+        // this.focusListener = navigation.addListener('Focus', async () => {
+        //     let max = await AsyncStorage.getItem("max");
+        //     let min = await AsyncStorage.getItem("min");
+        //     let type = await AsyncStorage.getItem("type");
+        //     let noti = await AsyncStorage.getItem("notification");
+        //     this.setState({ max: max, min: min, type: type, noti: JSON.parse(noti) })
+        // });
+
         itemsRef.on('value', snapshot => {
             let data = snapshot.val();
             let items = Object.values(data);
@@ -67,16 +75,28 @@ export default class App extends Component {
             }
         });
 
-        const { navigation } = this.props;
-        this.focusListener = navigation.addListener('didFocus', async () => {
-            let max = await AsyncStorage.getItem("max");
-            let min = await AsyncStorage.getItem("min");
-            let type = await AsyncStorage.getItem("type");
-            this.setState({ max: max, min: min, type: type })
-        });
+        React.useEffect(() => {
+            const { navigation } = this.props;
+            const unsubscribe = navigation.addListener('focus', async () => {
+                let max = await AsyncStorage.getItem("max");
+                let min = await AsyncStorage.getItem("min");
+                let type = await AsyncStorage.getItem("type");
+                let noti = await AsyncStorage.getItem("notification");
+                this.setState({ max: max, min: min, type: type, noti: JSON.parse(noti) })
+            });
+
+            return unsubscribe;
+        }, [navigation]);
+
+        return <ProfileContent />;
+
+
+
     }
 
+
     checkPressure = (items) => {
+        console.log(this.state.noti)
         if (items[0].TirePressure >= parseInt(this.state.min) && items[0].TirePressure <= parseInt(this.state.max)) {
             Alert.alert(
                 'Information',
