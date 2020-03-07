@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "146338642729",
+    "firebase_url": "https://fyp2tcms.firebaseio.com",
+    "project_id": "fyp2tcms",
+    "storage_bucket": "fyp2tcms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146338642729:android:58909a8f4e8a351d361538",
+        "android_client_info": {
+          "package_name": "com.example.hello_world_try"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146338642729-en3jf8u7o6j100tlpd5aq4ol23o308v7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChzSEEDCUYoGt_17cRARWxilDLH5-_4gQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146338642729-en3jf8u7o6j100tlpd5aq4ol23o308v7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
