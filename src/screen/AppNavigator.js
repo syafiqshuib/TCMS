@@ -2,7 +2,6 @@ import React from 'react';
 import { TouchableOpacity, YellowBox } from 'react-native';
 import Fontawesome from 'react-native-vector-icons/FontAwesome';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { fromLeft, fromRight } from 'react-navigation-transitions';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import { createSwitchNavigator } from 'react-navigation';
@@ -20,6 +19,7 @@ export default class AppNavigator extends React.Component {
         return <AppContainer />;
     }
 }
+
 
 const PressureStack = createStackNavigator();
 function PressureStackScreen({ navigation }) {
@@ -64,10 +64,14 @@ function PressureStackScreen({ navigation }) {
                         fontWeight: 'bold',
                     },
                 }}
+
+                
             />
         </PressureStack.Navigator>
     );
 }
+
+
 
 const LifeSpanStack = createStackNavigator();
 function LifeSpanStackScreen() {
@@ -96,7 +100,6 @@ const LocationStack = createStackNavigator();
 function LocationStackScreen() {
     return (
         <LocationStack.Navigator
-            initialRouteName="Pressure"
             screenOptions={{
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS   ///////////////////////////// AND HERE
             }}
@@ -105,7 +108,7 @@ function LocationStackScreen() {
                 name="Location"
                 component={LocationScreen}
                 options={{
-                    title: 'Location',
+                    title: 'Workshop',
                     headerStyle: {
                         backgroundColor: 'red',
                     },
@@ -126,22 +129,23 @@ function App() {
     return (
         <NavigationContainer>
             <Tab.Navigator
+                initialRouteName='Pressure'
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
-
                         if (route.name === 'Pressure') {
-                            iconName = 'exclamation';
+                            iconName = 'exclamation-triangle';
                         } else if (route.name === 'LifeSpan') {
                             iconName = 'heartbeat';
-                        }else if (route.name === 'Map') {
-                            iconName = 'map';
+                        } else if (route.name === 'Workshop') {
+                            iconName = 'wrench';
                         }
 
                         // You can return any component that you like here!
                         return <Fontawesome name={iconName} size={size} color={color} />;
                     },
                 })}
+
                 tabBarOptions={{
                     activeTintColor: 'white',
                     inactiveTintColor: '#D8D8D8',
@@ -159,12 +163,13 @@ function App() {
             >
                 <Tab.Screen name="Pressure" component={PressureStackScreen} />
                 <Tab.Screen name="LifeSpan" component={LifeSpanStackScreen} />
-                <Tab.Screen name="Map" component={LocationStackScreen} />
-
+                <Tab.Screen name="Workshop" component={LocationStackScreen} />
             </Tab.Navigator>
         </NavigationContainer>
     );
 }
+
+
 
 const AppsNavigator = createAppContainer(createSwitchNavigator(
     {
@@ -172,7 +177,7 @@ const AppsNavigator = createAppContainer(createSwitchNavigator(
         TabNavigatorScreen: App,
     },
     {
-        initialRouteName: 'TabNavigatorScreen',
+        initialRouteName: 'SplashScreen',
     }
 
 ));

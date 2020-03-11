@@ -31,7 +31,7 @@ class Splash extends React.Component {
             <View style={styles.viewStyles}>
                 <Image
                     style={{ width: 200, height: 200 }}
-                    source={require('../asset/tire.png')} />
+                    source={require('../asset/tireSplash.png')} />
                 <Text style={styles.textStyles}>TCMS</Text>
             </View>
         );
