@@ -17,7 +17,7 @@ import Modal from 'react-native-modalbox';
 import { db } from '../util/config';
 let itemsRef = db.ref('/Tires');
 let itemsRefWorkshop = db.ref('/Workshop');
-let itemsRefSetting = db.ref('/Setting');
+// let itemsRefSetting = db.ref('/Setting');
 
 export default function Pressure() {
     const [loading, setLoading] = useState(true);
@@ -28,62 +28,50 @@ export default function Pressure() {
     const [isOpen, setIsOpen] = useState(false)
     const [datas, setDatas] = useState(null);
     const [dataWorkshop, setDataWorkshop] = useState(null);
+    const [load, setLoad] = useState(false);
 
-    useEffect(() => {
-        itemsRefSetting.on('value', snapshot => {
-            let data = snapshot.val();
-            let items = Object.values(data);
-            setType(items[1].Car);
-            setMax(items[1].Max);
-            setMin(items[1].Min);
-        });
-    }, []);
-
-    // useFocusEffect(
-    //     React.useCallback(() => {
-    //         const fetchAsyncStorage = async () => {
-    //             try {
-    //                 const type2 = await AsyncStorage.getItem("type");
-    //                 const max2 = await AsyncStorage.getItem("max");
-    //                 const min2 = await AsyncStorage.getItem("min");
-    //                 const noti2 = await AsyncStorage.getItem("notification");
-
-    //                 setType(type2);
-    //                 setMax(max2);
-    //                 setMin(min2);
-    //                 setNoti(JSON.parse(noti2));
-
-    //             } catch (e) {
-    //                 console.log(e);
-    //             }
-    //         };
-    //         fetchAsyncStorage();
-    //     }, [])
-    // );
 
     useFocusEffect(
         React.useCallback(() => {
-            itemsRefSetting.on('value', snapshot => {
-                let data = snapshot.val();
-                let items = Object.values(data);
-                setType(items[1].Car);
-                setMax(items[1].Max);
-                setMin(items[1].Min);
-            });
+            // const fetchAsyncStorage = async () => {
+            //     setLoading(true);
+            //     try {
+            //         const type2 = await AsyncStorage.getItem("type");
+            //         const max2 = await AsyncStorage.getItem("max");
+            //         const min2 = await AsyncStorage.getItem("min");
+            //         const noti2 = await AsyncStorage.getItem("notification");
+            //         // console.log(max2 + " " + min2 + " " + noti2)
+            //         // setType(type2);
+            //         // setMax(max2);
+            //         // setMin(min2);
+            //         // setNoti(JSON.parse(noti2));
+            //         // setLoading(false);
+            //         // checkPressure(max2, min2);
+
+            //     } catch (e) {
+            //         console.log(e);
+            //     }
+            // };
+
+            const fetchData2 = async () => {
+                setLoading(true);
+                let type2 = await AsyncStorage.getItem("type");
+                let max2 = await AsyncStorage.getItem("max");
+                let min2 = await AsyncStorage.getItem("min");
+                let noti2 = await AsyncStorage.getItem("notification");
+                setType(type2);
+                itemsRef.on('value', snapshot => {
+                    let data = snapshot.val();
+                    let items = Object.values(data);
+                    setDatas(items);
+                    setLoading(false);
+                    checkPressure(max2, min2, items[0], noti2);
+                });
+            }
+            fetchData2();
         }, [])
     );
 
-
-    useEffect(() => {
-        const listener = itemsRef.on('value', snapshot => {
-            let data = snapshot.val();
-            let items = Object.values(data);
-            setDatas(items);
-            checkPressure();
-        });
-
-        return () => listener()
-    }, []);
 
     useEffect(() => {
         itemsRefWorkshop.on('value', snapshot => {
@@ -91,33 +79,46 @@ export default function Pressure() {
             let items = Object.values(data);
             setDataWorkshop(items);
             setLoading(false);
+            setLoad(true);
         });
     }, []);
 
-    const checkPressure = () => {
-        console.log(max + " " + min);
+    const checkPressure = (max2, min2, ain, noti2) => {
+
         let status = '';
-        if (datas[0].TirePressure >= parseInt(min) && datas[0].TirePressure <= parseInt(max)) {
+        if (ain.TirePressure >= parseInt(min2) && ain.TirePressure <= parseInt(max2)) {
             Alert.alert(
                 'Information',
                 'Your tire pressure is ideal.'
             )
             status = 'ideal';
-        } else if (datas[0].TirePressure < parseInt(min)) {
+        } else if (ain.TirePressure < parseInt(min2)) {
             Alert.alert(
                 'Alert!',
-                'Your tire pressure is low. Please fill more than ' + min + ' kPA.'
+                'Your tire pressure is low. Please fill more than ' + min2 + ' kPA. Go to nearest workshop?',
+                [
+                    { text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel' },
+                    { text: 'Yes', onPress: () => setIsOpen(true) },
+                ],
+                { cancelable: false }
             )
             status = 'low';
-        } else if (datas[0].TirePressure > parseInt(max)) {
+        } else if (ain.TirePressure > parseInt(max2)) {
             Alert.alert(
                 'Alert!',
-                'Your tire pressure is high. Please fill less than ' + max + ' kPA.'
+                'Your tire pressure is high. Please fill less than ' + max2 + ' kPA. Go to nearest workshop?',
+                [
+                    { text: 'No', onPress: () => console.log('No Pressed'), style: 'cancel' },
+                    { text: 'Yes', onPress: () => setIsOpen(true) },
+                ],
+                { cancelable: false }
             )
             status = 'high';
         }
-        if (noti) {
-            checkNotification(status)
+
+        if (noti2) {
+            console.log(status)
+            // checkNotification(status)
         }
     }
 
@@ -185,16 +186,18 @@ export default function Pressure() {
         );
     }
 
-    if (datas && dataWorkshop) {
+    if (load) {
         return (
             <View style={styles.MainContainer}>
                 <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>Type of Car : {type ? type : '-'}</Text>
+                {/* <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>{status}</Text> */}
+
                 <FlatList
                     data={datas}
                     renderItem={({ item }) => (
                         <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
                             <View style={styles.Thumbnail}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 10 }}>Tire {item.tireNo}</Text>
+                                <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 10 }}>{item.tireName}</Text>
                                 <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'green' }}>{item.TirePressure} kPA</Text>
                                 <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'green' }}>{item.TireAirTemperature} C</Text>
                             </View>
@@ -209,9 +212,8 @@ export default function Pressure() {
                 </TouchableOpacity>
                 <TouchableOpacity activeOpacity={.7} onPress={() => setIsOpen(true)}
                     style={{ position: 'absolute', left: 0, bottom: 0, padding: 20 }}>
-                    <Fontawesome name='list' size={37} ></Fontawesome>
+                    <Fontawesome name='home' size={40} ></Fontawesome>
                 </TouchableOpacity>
-
                 <Modal
                     style={[styles.modal, styles.modal3]}
                     position={'center'}
@@ -226,30 +228,32 @@ export default function Pressure() {
                                 <Text style={styles.buttonText}>
                                     List Of Workshop  </Text>
                             </View>
-                            <ScrollView showsVerticalScrollIndicator={false}>
-                                {
-                                    dataWorkshop.map((workshop, id) =>
-                                        (
-                                            <TouchableOpacity
-                                                key={id}
-                                                activeOpacity={.7}
-                                                style={styles.container}
-                                                onPress={() => {
-                                                    openGps(workshop.latitude, workshop.longitude, workshop.name)
-                                                }}
-                                            >
-                                                <View style={{ justifyContent: 'center' }}>
-                                                    <Text>{workshop.name}</Text>
-                                                    <Text>{workshop.address}</Text>
-                                                </View>
-                                                <View style={{ justifyContent: 'center', right: 10 }}>
-                                                    <Fontawesome name='angle-right' size={40}></Fontawesome>
-                                                </View>
-                                            </TouchableOpacity>
-                                        ))
-                                }
+                            <SafeAreaView style={{ height: '80%' }}>
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                    {
+                                        dataWorkshop.map((workshop, id) =>
+                                            (
+                                                <TouchableOpacity
+                                                    key={id}
+                                                    activeOpacity={.7}
+                                                    style={styles.container}
+                                                    onPress={() => {
+                                                        openGps(workshop.latitude, workshop.longitude, workshop.name)
+                                                    }}
+                                                >
+                                                    <View style={{ justifyContent: 'center', width: '80%' }}>
+                                                        <Text>{workshop.name}</Text>
+                                                        <Text>{workshop.address}</Text>
+                                                    </View>
+                                                    <View style={{ justifyContent: 'center', right: 5 }}>
+                                                        <Fontawesome name='angle-right' size={40}></Fontawesome>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            ))
+                                    }
 
-                            </ScrollView>
+                                </ScrollView>
+                            </SafeAreaView>
                             <TouchableOpacity
                                 style={styles.buttonOk}
                                 activeOpacity={0.7}
@@ -265,150 +269,9 @@ export default function Pressure() {
             </View>
         )
     }
+
+    return null;
 }
-
-class App extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            refreshing: true,
-            items: [],
-            max: '',
-            min: '',
-            type: ''
-        };
-        console.ignoredYellowBox = [
-            'Setting a timer'
-        ];
-    }
-
-    handleClick = (type) => {
-        let msg = '';
-
-        if (type === 'low') {
-            msg = 'Your tire pressure is low';
-        } else {
-            msg = 'Your tire pressure is high';
-        }
-        Notification.configure()
-            .localNotification({
-                title: "TCMS",
-                message: msg,
-            })
-
-    }
-
-    async componentDidMount() {
-        let max = await AsyncStorage.getItem("max");
-        let min = await AsyncStorage.getItem("min");
-        let type = await AsyncStorage.getItem("type");
-        let noti = await AsyncStorage.getItem("notification");
-        this.setState({ max: max, min: min, type: type, noti: JSON.parse(noti) })
-
-        itemsRef.on('value', snapshot => {
-            let data = snapshot.val();
-            let items = Object.values(data);
-            if (items[0].Button === 1) {
-                this.checkPressure(items);
-            } else {
-                this.setState({ dataSource: items, refreshing: false });
-            }
-        });
-
-
-
-    }
-
-
-    checkPressure = (items) => {
-        console.log(this.state.noti)
-        if (items[0].TirePressure >= parseInt(this.state.min) && items[0].TirePressure <= parseInt(this.state.max)) {
-            Alert.alert(
-                'Information',
-                'Your tire pressure is ideal.'
-            )
-        } else if (items[0].TirePressure < parseInt(this.state.min)) {
-            Alert.alert(
-                'Alert!',
-                'Your tire pressure is low. Please fill more than ' + this.state.min + ' kPA.'
-            )
-            if (this.state.noti === true) {
-                this.handleClick('low')
-            }
-        } else if (items[0].TirePressure > parseInt(this.state.max)) {
-            Alert.alert(
-                'Alert!',
-                'Your tire pressure is high. Please fill less than ' + this.state.max + ' kPA.'
-            )
-            if (this.state.noti === true) {
-                this.handleClick('high')
-            }
-        }
-        this.setState({ dataSource: items, refreshing: false });
-    }
-
-    shareBtn = async () => {
-        let tire1 = this.state.dataSource[0];
-        let tire2 = this.state.dataSource[1];
-        let tire3 = this.state.dataSource[2];
-        let tire4 = this.state.dataSource[3];
-
-        try {
-            const result = await Share.share({
-                title:
-                    'TCMS',
-                message:
-                    'Tire 1 = ' + tire1.TirePressure + ' kPA, ' + tire1.TireAirTemperature + ' C /Tire 2 = ' + tire2.TirePressure + ' kPA, ' + tire2.TireAirTemperature + ' C /Tire 3 = ' + tire3.TirePressure + ' kPA, ' + tire3.TireAirTemperature + ' C /Tire 4 = ' + tire4.TirePressure + ' kPA, ' + tire4.TireAirTemperature + ' C',
-            });
-
-            if (result.action === Share.sharedAction) {
-                if (result.activityType) {
-                } else {
-                }
-            } else if (result.action === Share.dismissedAction) {
-            }
-        } catch (error) {
-            alert(error.message);
-        }
-    }
-
-    render() {
-
-        if (this.state.refreshing) {
-            return (
-                <View
-                    style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-                >
-                    <ActivityIndicator size="large" color='red' />
-                </View>
-            );
-        }
-        return (
-            <View style={styles.MainContainer}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>Type of Car : {this.state.type ? this.state.type : '-'}</Text>
-                <FlatList
-                    data={this.state.dataSource}
-                    renderItem={({ item }) => (
-                        <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
-                            <View style={styles.Thumbnail}>
-                                <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 10 }}>Tire {item.tireNo}</Text>
-                                <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'green' }}>{item.TirePressure} kPA</Text>
-                                <Text style={{ fontSize: 25, fontWeight: 'bold', color: 'green' }}>{item.TireAirTemperature} C</Text>
-                            </View>
-                        </View>
-                    )}
-                    numColumns={2}
-                    keyExtractor={item => item.tireNo}
-                />
-                <TouchableOpacity activeOpacity={.7} onPress={() => this.shareBtn()}
-                    style={{ position: 'absolute', right: 0, bottom: 0, padding: 20 }}>
-                    <Fontawesome name='share-alt' size={45} ></Fontawesome>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-}
-
 
 const styles = StyleSheet.create({
 
@@ -449,7 +312,7 @@ const styles = StyleSheet.create({
     },
 
     modal3: {
-        height: 300,
+        height: 400,
         width: 300,
     },
 

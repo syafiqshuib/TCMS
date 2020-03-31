@@ -57,10 +57,15 @@ export default class Lifespan extends Component {
                 itemsRef.once('value', snapshot => {
                     let data = snapshot.val();
                     let items = Object.values(data);
+
+                    var degradationRate = (items[0].Then - 1.5875) / 3;
+                    var lifeSpan = (1 / degradationRate.toFixed(3)) * (items[0].TireTread - 1.5875) * (365 / 1);
+
                     this.setState({
                         tireNo: items[0].tireNo,
-                        thenVal: items[0].Then,
-                        nowVal: items[0].TireTread,
+                        thenVal: items[0].Then.toFixed(1),
+                        nowVal: items[0].TireTread.toFixed(1),
+                        predictLifeSpan: lifeSpan.toFixed(1),
                         refreshing: false
                     });
                 });
@@ -89,10 +94,15 @@ export default class Lifespan extends Component {
             itemsRef.once('value', snapshot => {
                 let data = snapshot.val();
                 let items = Object.values(data);
+
+                var degradationRate = (items[0].TireTread - 1.5875) / 3;
+                var lifeSpan = (1 / degradationRate.toFixed(3)) * (items[0].TireTread - 1.5875) * (365 / 1);
+
                 this.setState({
                     tireNo: items[0].tireNo,
-                    thenVal: items[0].TireTread,
-                    nowVal: items[0].TireTread,
+                    thenVal: items[0].TireTread.toFixed(1),
+                    nowVal: items[0].TireTread.toFixed(1),
+                    predictLifeSpan: lifeSpan.toFixed(1),
                     refreshing: false
                 });
                 db.ref('/Tread/Tire' + val).update({
@@ -136,13 +146,13 @@ export default class Lifespan extends Component {
                             </TouchableOpacity>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: {this.state.thenVal} cm</Text>
+                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: {this.state.thenVal} mm</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: {this.state.nowVal} cm</Text>
+                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: {this.state.nowVal} mm</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : {this.state.thenVal ? this.state.thenVal - this.state.nowVal : 0} months left</Text>
+                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : {this.state.predictLifeSpan} days left</Text>
                         </View>
                     </View>
                     <View style={styles.container}>

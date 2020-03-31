@@ -4,7 +4,6 @@ import { Dropdown } from 'react-native-material-dropdown';
 import AsyncStorage from '@react-native-community/async-storage';
 
 import { db } from '../util/config';
-let itemsRef = db.ref('/Setting/Type');
 
 export default class Setting extends Component {
 
@@ -43,15 +42,9 @@ export default class Setting extends Component {
         let max = data[index].max;
         let min = data[index].min;
         this.setState({ selectedValue: value })
-        // AsyncStorage.setItem('type', value);
-        // AsyncStorage.setItem('max', JSON.stringify(max));
-        // AsyncStorage.setItem('min', JSON.stringify(min));
-
-        itemsRef.update({
-            Car: value,
-            Max: max,
-            Min: min
-        });
+        AsyncStorage.setItem('type', value);
+        AsyncStorage.setItem('max', JSON.stringify(max));
+        AsyncStorage.setItem('min', JSON.stringify(min));
 
         ToastAndroid.show('Type of car is default to ' + value, ToastAndroid.LONG);
         this.getToken();
