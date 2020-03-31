@@ -140,13 +140,12 @@ export default function Pressure() {
 
     const shareBtn = async () => {
         let tire1 = datas[0];
-
         try {
             const result = await Share.share({
                 title:
                     'TCMS',
                 message:
-                    'Tire 1 = ' + tire1.TirePressure + ' kPA & ' + tire1.TireAirTemperature + ' C'
+                    tire1.tireName + '= ' + tire1.TirePressure + ' kPA & ' + tire1.TireAirTemperature + ' C.'
             });
 
             if (result.action === Share.sharedAction) {
@@ -190,8 +189,6 @@ export default function Pressure() {
         return (
             <View style={styles.MainContainer}>
                 <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>Type of Car : {type ? type : '-'}</Text>
-                {/* <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>{status}</Text> */}
-
                 <FlatList
                     data={datas}
                     renderItem={({ item }) => (
@@ -209,10 +206,6 @@ export default function Pressure() {
                 <TouchableOpacity activeOpacity={.7} onPress={() => shareBtn()}
                     style={{ position: 'absolute', right: 0, bottom: 0, padding: 20 }}>
                     <Fontawesome name='share-alt' size={40} ></Fontawesome>
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={.7} onPress={() => setIsOpen(true)}
-                    style={{ position: 'absolute', left: 0, bottom: 0, padding: 20 }}>
-                    <Fontawesome name='home' size={40} ></Fontawesome>
                 </TouchableOpacity>
                 <Modal
                     style={[styles.modal, styles.modal3]}
@@ -242,7 +235,7 @@ export default function Pressure() {
                                                     }}
                                                 >
                                                     <View style={{ justifyContent: 'center', width: '80%' }}>
-                                                        <Text>{workshop.name}</Text>
+                                                        <Text style={{ fontWeight: 'bold' }}>{workshop.name}</Text>
                                                         <Text>{workshop.address}</Text>
                                                     </View>
                                                     <View style={{ justifyContent: 'center', right: 5 }}>

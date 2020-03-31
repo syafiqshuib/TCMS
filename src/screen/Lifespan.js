@@ -23,8 +23,9 @@ export default class Lifespan extends Component {
             let items = Object.values(data);
             this.setState({
                 tireNo: items[0].tireNo,
-                thenVal: items[0].Then,
-                nowVal: items[0].TireTread,
+                thenVal: items[0].Then.toFixed(1),
+                nowVal: items[0].TireTread.toFixed(1),
+                tireName: items[0].tireName,
                 refreshing: false
             });
         });
@@ -131,19 +132,8 @@ export default class Lifespan extends Component {
                                 return ( */}
                     <View style={styles.container}>
                         <View style={{ flexDirection: 'row', marginBottom: 7 }}>
-                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>Tire {this.state.tireNo}</Text>
-                            <TouchableOpacity
-                                onPress={() => this.readNowBtn(1)}
-                                activeOpacity={0.5}
-                                style={{ backgroundColor: 'red', marginRight: 10, borderRadius: 5, paddingHorizontal: 20, justifyContent: 'center' }}>
-                                <Text style={{ color: 'white', fontSize: 18 }}>READ NOW</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={() => this.newTireBtn(1)}
-                                activeOpacity={0.5}
-                                style={{ backgroundColor: 'red', borderRadius: 5, paddingHorizontal: 20, justifyContent: 'center' }}>
-                                <Text style={{ color: 'white', fontSize: 18 }}>NEW TIRE</Text>
-                            </TouchableOpacity>
+                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>{this.state.tireName}</Text>
+
                         </View>
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: {this.state.thenVal} mm</Text>
@@ -152,12 +142,9 @@ export default class Lifespan extends Component {
                             <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: {this.state.nowVal} mm</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : {this.state.predictLifeSpan} days left</Text>
+                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : {this.state.predictLifeSpan ? this.state.predictLifeSpan : 0} days left</Text>
                         </View>
-                    </View>
-                    <View style={styles.container}>
-                        <View style={{ flexDirection: 'row', marginBottom: 7 }}>
-                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>Tire 2</Text>
+                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity
                                 onPress={() => this.readNowBtn(1)}
                                 activeOpacity={0.5}
@@ -171,19 +158,21 @@ export default class Lifespan extends Component {
                                 <Text style={{ color: 'white', fontSize: 18 }}>NEW TIRE</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: 30 cm</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: 30 cm</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : 0 months left</Text>
-                        </View>
                     </View>
                     <View style={styles.container}>
-                        <View style={{ flexDirection: 'row', marginBottom: 7 }}>
-                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>Tire 3</Text>
+                        <View style={{ marginBottom: 7 }}>
+                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>FRONT RIGHT</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: 7.9 mm</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: 7.9 mm</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : 0 days left</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity
                                 onPress={() => this.readNowBtn(1)}
                                 activeOpacity={0.5}
@@ -197,19 +186,21 @@ export default class Lifespan extends Component {
                                 <Text style={{ color: 'white', fontSize: 18 }}>NEW TIRE</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: 30 cm</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: 30 cm</Text>
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : 0 months left</Text>
-                        </View>
                     </View>
                     <View style={styles.container}>
-                        <View style={{ flexDirection: 'row', marginBottom: 7 }}>
-                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>Tire 4</Text>
+                        <View style={{ marginBottom: 7 }}>
+                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>REAR LEFT</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: 7.9 mm</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: 7.9 mm</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : 0 days left</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <TouchableOpacity
                                 onPress={() => this.readNowBtn(1)}
                                 activeOpacity={0.5}
@@ -223,14 +214,33 @@ export default class Lifespan extends Component {
                                 <Text style={{ color: 'white', fontSize: 18 }}>NEW TIRE</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: 30 cm</Text>
+                    </View>
+                    <View style={styles.container}>
+                        <View style={{ marginBottom: 7 }}>
+                            <Text style={{ marginRight: 10, fontSize: 25, fontWeight: 'bold' }}>REAR RIGHT</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: 30 cm</Text>
+                            <Text style={{ fontSize: 17, width: 45 }}>Then </Text><Text style={{ color: 'green', fontSize: 17 }}>: 7.9 mm</Text>
                         </View>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : 0 months left</Text>
+                            <Text style={{ fontSize: 17, width: 45 }}>Now </Text><Text style={{ color: 'green', fontSize: 17 }}>: 7.9 mm</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17 }}>Predicted Lifespan </Text><Text style={{ color: 'green', fontSize: 17 }}> : 0 days left</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                            <TouchableOpacity
+                                onPress={() => this.readNowBtn(1)}
+                                activeOpacity={0.5}
+                                style={{ backgroundColor: 'red', marginRight: 10, borderRadius: 5, paddingHorizontal: 20, justifyContent: 'center' }}>
+                                <Text style={{ color: 'white', fontSize: 18 }}>READ NOW</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={() => this.newTireBtn(1)}
+                                activeOpacity={0.5}
+                                style={{ backgroundColor: 'red', borderRadius: 5, paddingHorizontal: 20, justifyContent: 'center' }}>
+                                <Text style={{ color: 'white', fontSize: 18 }}>NEW TIRE</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                     {/* )
@@ -247,7 +257,7 @@ export default class Lifespan extends Component {
 const styles = StyleSheet.create({
     container: {
         borderBottomWidth: 0.5,
-        height: 150,
+        height: 190,
         padding: 20
     },
 })

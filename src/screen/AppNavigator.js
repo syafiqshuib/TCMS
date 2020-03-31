@@ -177,7 +177,7 @@ const AppsNavigator = createAppContainer(createSwitchNavigator(
         TabNavigatorScreen: App,
     },
     {
-        initialRouteName: 'TabNavigatorScreen',
+        initialRouteName: 'SplashScreen',
     }
 
 ));
