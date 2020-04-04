@@ -59,8 +59,14 @@ export default class Lifespan extends Component {
                     let data = snapshot.val();
                     let items = Object.values(data);
 
-                    var degradationRate = (items[0].Then - 1.5875) / 3;
-                    var lifeSpan = (1 / degradationRate.toFixed(3)) * (items[0].TireTread - 1.5875) * (365 / 1);
+                    // var degradationRate = (items[0].Then - 1.5875) / 3;
+                    // var lifeSpan = (1 / degradationRate.toFixed(3)) * (items[0].TireTread - 1.5875) * (365 / 1);
+                    let x = 2.117;
+                    let ti = 7.938;
+                    let tf = 1.5875;
+
+                    let tc = ti - (items[0].TireTread - items[0].Then);
+                    let lifeSpan = ((tc - tf) / x) * 365;
 
                     this.setState({
                         tireNo: items[0].tireNo,
@@ -96,8 +102,15 @@ export default class Lifespan extends Component {
                 let data = snapshot.val();
                 let items = Object.values(data);
 
-                var degradationRate = (items[0].TireTread - 1.5875) / 3;
-                var lifeSpan = (1 / degradationRate.toFixed(3)) * (items[0].TireTread - 1.5875) * (365 / 1);
+                // var degradationRate = (items[0].TireTread - 1.5875) / 3;
+                // var lifeSpan = (1 / degradationRate.toFixed(3)) * (items[0].TireTread - 1.5875) * (365 / 1);
+
+                let x = 2.117;
+                let ti = 7.938;
+                let tf = 1.5875;
+
+                let tc = ti - (items[0].TireTread - items[0].Then);
+                let lifeSpan = ((tc - tf) / x) * 365;
 
                 this.setState({
                     tireNo: items[0].tireNo,
